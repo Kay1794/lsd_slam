@@ -68,9 +68,9 @@ KeyFrameGraph::KeyFrameGraph()
 	typedef g2o::BlockSolver_7_3 BlockSolver;
 	typedef g2o::LinearSolverCSparse<BlockSolver::PoseMatrixType> LinearSolver;
 	//typedef g2o::LinearSolverPCG<BlockSolver::PoseMatrixType> LinearSolver;
-	LinearSolver* solver = new LinearSolver();
-	BlockSolver* blockSolver = new BlockSolver(solver);
-	g2o::OptimizationAlgorithmLevenberg* algorithm = new g2o::OptimizationAlgorithmLevenberg(blockSolver);
+	auto solver = g2o::make_unique<LinearSolver>();
+	auto blockSolver = g2o::make_unique<BlockSolver>(std::move(solver));
+	g2o::OptimizationAlgorithmLevenberg* algorithm = new g2o::OptimizationAlgorithmLevenberg(std::move(blockSolver));
 	graph.setAlgorithm(algorithm);
 	
     graph.setVerbose(false); // printOptimizationInfo
